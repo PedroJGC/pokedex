@@ -7,27 +7,31 @@ interface Pokemon {
 }
 
 function App() {
-  const [pokemon, setPokemon] = useState<Pokemon | null>(null)
+  const [pokemons, setPokemons] = useState<Pokemon[]>([])
 
   useEffect(() => {
     const loadPokemon = async () => {
       const data = await fetchPokemon()
       if (data) {
-        setPokemon(data)
+        setPokemons([data])
       }
     }
 
     loadPokemon()
   }, [])
 
-  if (!pokemon) {
+  if (pokemons.length === 0) {
     return <p>Carregando...</p>
   }
 
   return (
     <div>
-      <h1>{pokemon.name}</h1>
-      <img src={pokemon.image} alt={pokemon.name} />
+      {pokemons.map((pokemon, index) => (
+        <div key={index}>
+          <h1>{pokemon.name}</h1>
+          <img src={pokemon.image} alt={pokemon.name} />
+        </div>
+      ))}
     </div>
   )
 }
