@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { fetchPokemon } from "./services/poke_api"
+import { fetchPokemons } from "./services/poke_api"
 
 interface Pokemon {
   name: string
@@ -10,14 +10,14 @@ function App() {
   const [pokemons, setPokemons] = useState<Pokemon[]>([])
 
   useEffect(() => {
-    const loadPokemon = async () => {
-      const data = await fetchPokemon()
+    const loadPokemons = async () => {
+      const data = await fetchPokemons(20)
       if (data) {
-        setPokemons([data])
+        setPokemons(data)
       }
     }
 
-    loadPokemon()
+    loadPokemons()
   }, [])
 
   if (pokemons.length === 0) {
