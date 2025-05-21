@@ -25,11 +25,11 @@ function App() {
   }
 
   return (
-    <div>
+    <div className="grid grid-cols-3 gap-4">
       {pokemons.map((pokemon, index) => (
-        <div key={index}>
-          <h1>{pokemon.name}</h1>
+        <div key={index} className="flex flex-col items-center justify-center">
           <img src={pokemon.image} alt={pokemon.name} />
+          <h1 className="">{pokemon.name}</h1>
         </div>
       ))}
     </div>
