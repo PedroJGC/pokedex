@@ -4,6 +4,7 @@ import { fetchPokemons } from "./services/poke_api"
 interface Pokemon {
   name: string
   image: string
+  types: string[]
 }
 
 function App() {
@@ -25,17 +26,30 @@ function App() {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center gap-4 ">
-      {pokemons.map((pokemon, index) => (
-        <div
-          key={index}
-          className="flex flex-col items-center justify-center w-80 h-80 bg-gray-200"
-        >
-          <img src={pokemon.image} alt={pokemon.name} />
-          <h1 className="">{pokemon.name}</h1>
-        </div>
-      ))}
-    </div>
+    <main>
+      <ol className="flex flex-col items-center justify-center gap-4 ">
+        {pokemons.map((pokemon, index) => (
+          <li
+            key={index}
+            className="flex flex-col items-center justify-center w-80 h-80 bg-gray-200"
+          >
+            <h2 className="font-[Roboto] first-letter:uppercase text-2xl font-bold">
+              {pokemon.name}
+            </h2>
+            <ol>
+              {pokemon.types.map((type) => {
+                return (
+                  <li key={type}>
+                    <div>{type}</div>
+                  </li>
+                )
+              })}
+            </ol>
+            <img src={pokemon.image} alt={pokemon.name} className="max-w-40" />
+          </li>
+        ))}
+      </ol>
+    </main>
   )
 }
 

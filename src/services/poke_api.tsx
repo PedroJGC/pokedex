@@ -8,7 +8,10 @@ export async function fetchPokemons(limit: number) {
 
       pokemons.push({
         name: data.name,
-        image: data.sprites.front_default,
+        image: data.sprites.other["official-artwork"].front_default,
+        types: data.types.map(
+          (type: { type: { name: string } }) => type.type.name
+        ),
       })
     }
     return pokemons
