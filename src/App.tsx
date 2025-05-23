@@ -26,26 +26,39 @@ function App() {
   }
 
   return (
-    <main>
-      <ol className="flex flex-col items-center justify-center gap-4 ">
+    <main className="grid justify-center">
+      <ol className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 items-center justify-center">
         {pokemons.map((pokemon, index) => (
           <li
             key={index}
-            className="flex flex-col items-center justify-center w-80 h-80 bg-gray-200"
+            className="flex items-center justify-center w-80 h-80 bg-gray-200 mx-auto lg:w-96"
           >
-            <h2 className="font-[Roboto] first-letter:uppercase text-2xl font-bold">
-              {pokemon.name}
-            </h2>
-            <ol>
-              {pokemon.types.map((type) => {
-                return (
-                  <li key={type}>
-                    <div>{type}</div>
-                  </li>
-                )
-              })}
-            </ol>
-            <img src={pokemon.image} alt={pokemon.name} className="max-w-40" />
+            <div className="grid grid-cols-2 h-full w-full items-center">
+              <div className="flex flex-col justify-center items-start gap-2 pl-4">
+                <h2 className="font-nunito text-slate-700 first-letter:uppercase text-2xl font-bold col-span-2">
+                  {pokemon.name}
+                </h2>
+                <ol className="col-span-2 font-nunito first-letter:uppercase pt-6">
+                  {pokemon.types.map((type) => {
+                    return (
+                      <li key={type}>
+                        <div>{type}</div>
+                      </li>
+                    )
+                  })}
+                </ol>
+                <div>
+                  <p className="text-sm text-slate-500">{`N° ${(index += 1).toString().padStart(4, "0")}`}</p>
+                </div>
+              </div>
+              <div className="flex justify-end items-center h-full pr-4">
+                <img
+                  src={pokemon.image}
+                  alt={pokemon.name}
+                  className="max-w-40 row-span-3"
+                />
+              </div>
+            </div>
           </li>
         ))}
       </ol>
