@@ -38,11 +38,11 @@ function App() {
                 <h2 className="font-nunito text-slate-700 first-letter:uppercase text-2xl font-bold col-span-2">
                   {pokemon.name}
                 </h2>
-                <ol className="col-span-2 font-nunito first-letter:uppercase pt-6">
+                <ol className="col-span-2 font-nunito  pt-6">
                   {pokemon.types.map((type) => {
                     return (
                       <li key={type}>
-                        <div>{type}</div>
+                        <div className="first-letter:uppercase">{type}</div>
                       </li>
                     )
                   })}
