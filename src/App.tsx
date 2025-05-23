@@ -26,12 +26,12 @@ function App() {
   }
 
   return (
-    <main className="grid px-4 md:px-4 lg:px-8 max-w-screen-xl mx-auto">
-      <ol className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-4 lg:gap-8 items-center justify-center">
+    <main className="grid px-4  md:px-4 lg:px-8 max-w-screen-xl mx-auto">
+      <ol className="grid grid-cols-1  sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-4 lg:gap-8 items-center justify-center">
         {pokemons.map((pokemon, index) => (
           <li
             key={index}
-            className="flex items-center justify-between w-full max-w-2xl h-60 bg-gray-200 rounded-2xl shadow-md mx-auto my-4 p-4 md:p-1"
+            className="flex items-center justify-between w-full max-w-2xl h-60 bg-white rounded-2xl shadow-md mx-auto  p-4 md:p-1"
           >
             <div className="grid grid-cols-2 h-full w-full items-center">
               <div className="flex flex-col justify-center items-start gap-2 pl-4">
@@ -55,7 +55,7 @@ function App() {
                 <img
                   src={pokemon.image}
                   alt={pokemon.name}
-                  className="max-w-40 row-span-3"
+                  className="max-w-40 lg:max-w-32 row-span-3"
                 />
               </div>
             </div>
