@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import { fetchPokemons } from "./services/poke_api"
+import { typeColors } from "./utils/typeColors"
 
 interface Pokemon {
   name: string
@@ -31,7 +32,7 @@ function App() {
         {pokemons.map((pokemon, index) => (
           <li
             key={index}
-            className="flex items-center justify-between w-full max-w-2xl h-60 bg-white rounded-2xl shadow-md mx-auto  p-4 md:p-1"
+            className="flex items-center justify-between w-full max-w-2xl h-60 bg-white rounded-2xl shadow-md mx-auto  p-4 md:p-1 hover:scale-105"
           >
             <div className="grid grid-cols-2 h-full w-full items-center">
               <div className="flex flex-col justify-center items-start gap-2 pl-4">
@@ -41,8 +42,13 @@ function App() {
                 <ol className="col-span-2 font-nunito  pt-6">
                   {pokemon.types.map((type) => {
                     return (
-                      <li key={type}>
-                        <div className="first-letter:uppercase">{type}</div>
+                      <li key={type} className="mb-1">
+                        <div
+                          className={`first-letter:uppercase px-2 rounded ${typeColors[type] || "bg-gray-300"}`}
+                          style={{ backgroundColor: typeColors[type] }}
+                        >
+                          {type}
+                        </div>
                       </li>
                     )
                   })}
