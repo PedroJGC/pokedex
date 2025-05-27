@@ -32,7 +32,7 @@ export function Home() {
         {pokemons.map((pokemon, index) => (
           <li
             key={index}
-            className="flex items-center justify-between w-full max-w-2xl h-60 bg-white rounded-2xl shadow-md mx-auto  p-4 md:p-1 hover:scale-105"
+            className="relative flex items-center justify-between w-full max-w-2xl h-60 bg-white rounded-2xl shadow-md mx-auto  p-4 md:p-1 hover:scale-105 overflow-hidden"
           >
             <div className="grid grid-cols-2 h-full w-full items-center">
               <div className="flex flex-col justify-center items-start gap-2 pl-4">
@@ -61,7 +61,7 @@ export function Home() {
                 <img
                   src={pokemon.image}
                   alt={pokemon.name}
-                  className="max-w-40 lg:max-w-32 row-span-3"
+                  className="max-w-40 lg:max-w-32 row-span-3 z-10"
                 />
               </div>
             </div>
