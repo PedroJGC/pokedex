@@ -122,6 +122,31 @@ export async function fetchPokemonPage(
   }
 }
 
+export async function fetchPokemonById(id: string | number) {
+  try {
+    const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`)
+    const data = await response.json()
+
+    return {
+      id: data.id,
+      name: data.name,
+      image: data.sprites.other["official-artwork"].front_default,
+      types: data.types.map(
+        (type: { type: { name: string } }) => type.type.name
+      ),
+      stats: data.stats.map((stat: any) => ({
+        name: stat.stat.name,
+        value: stat.base_stat,
+      })),
+      height: data.height,
+      weight: data.weight,
+    }
+  } catch (error) {
+    console.error("Erro ao buscar Pokémon:", error)
+    throw error
+  }
+}
+
 /**
  * Busca Pokémons por nome (para funcionalidade de busca)
  */
