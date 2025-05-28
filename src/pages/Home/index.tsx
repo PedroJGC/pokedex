@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react"
+import { useNavigate } from "react-router-dom"
 import { fetchPokemonPage } from "../../services/poke_api"
 import { typeColors } from "../../utils/typeColors"
 
@@ -17,6 +18,7 @@ export function Home() {
   const [hasMore, setHasMore] = useState(true)
   const [totalCount, setTotalCount] = useState(0)
   const [error, setError] = useState<string | null>(null)
+  const navigate = useNavigate()
 
   const POKEMONS_PER_PAGE = 21
 
@@ -66,6 +68,10 @@ export function Home() {
     loadInitialPokemons()
   }, [])
 
+  const handlePokemonClick = (index: number) => {
+    navigate(`/pokemon/${index + 1}`)
+  }
+
   // Loading inicial
   if (isLoading) {
     return (
@@ -106,10 +112,11 @@ export function Home() {
 
       {/* Grid de Pokémons */}
       <ol className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-4 lg:gap-8 items-center justify-center">
-        {pokemons.map((pokemon) => (
+        {pokemons.map((pokemon, index) => (
           <li
-            key={pokemon.id}
-            className="relative flex items-center justify-between w-full max-w-2xl h-60 bg-white rounded-2xl shadow-md mx-auto p-4 md:p-1 hover:scale-105 transition-transform duration-200 overflow-hidden"
+            key={index}
+            onClick={() => handlePokemonClick(index)}
+            className="relative flex items-center justify-between w-full max-w-2xl h-60 bg-white rounded-2xl shadow-md mx-auto p-4 md:p-1 hover:scale-105 transition-transform duration-200 overflow-hidden cursor-pointer"
           >
             <div className="grid grid-cols-2 h-full w-full items-center">
               <div className="flex flex-col justify-center items-start gap-2 pl-4">

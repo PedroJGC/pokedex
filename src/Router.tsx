@@ -9,7 +9,7 @@ export function Router() {
     <Routes>
       <Route path="/" element={<DefaultLayout />}>
         <Route path="/" element={<Home />} />
-        <Route path="/load-pokemon" element={<LoadPokemon />} />
+        <Route path="/load-pokemon/:id" element={<LoadPokemon />} />
       </Route>
     </Routes>
   )
