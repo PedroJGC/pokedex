@@ -118,7 +118,6 @@ export function Home() {
     loadInitialPokemons()
   }, [])
 
-  // CORREÇÃO: Usa o ID real do Pokémon ao invés do índice
   const handlePokemonClick = (pokemon: Pokemon) => {
     navigate(`/load-pokemon/${pokemon.id}`)
   }
@@ -129,7 +128,9 @@ export function Home() {
       <div className="flex items-center justify-center min-h-96">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-rose-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Carregando Pokémons...</p>
+          <p className="text-gray-600">
+            {isSearchMode ? "Buscando Pokémons..." : "Carregando Pokémons..."}
+          </p>
         </div>
       </div>
     )
@@ -159,8 +160,11 @@ export function Home() {
         {isSearchMode ? (
           <div className="space-y-2">
             <p className="text-gray-600">
-              Resultados para "{searchTerm}": {pokemons.length} Pokémon(s)
-              encontrado(s)
+              Pokémons encontrados para "{searchTerm}": {pokemons.length}{" "}
+              resultado(s)
+            </p>
+            <p className="text-sm text-gray-500">
+              Mostrando Pokémons que contêm "{searchTerm}" no nome
             </p>
             <button
               onClick={clearSearch}
@@ -180,12 +184,18 @@ export function Home() {
       {/* Mensagem quando não há resultados na pesquisa */}
       {isSearchMode && pokemons.length === 0 && !isLoading && (
         <div className="text-center py-12">
-          <p className="text-gray-600 text-lg mb-4">
-            Nenhum Pokémon encontrado para "{searchTerm}"
-          </p>
+          <div className="mb-6">
+            <div className="text-6xl opacity-20 mb-4">🔍</div>
+            <p className="text-gray-600 text-lg mb-2">
+              Nenhum Pokémon encontrado para "{searchTerm}"
+            </p>
+            <p className="text-gray-500 text-sm mb-6">
+              Tente digitar o nome completo ou parte do nome do Pokémon
+            </p>
+          </div>
           <button
             onClick={clearSearch}
-            className="px-4 py-2 bg-rose-600 text-white rounded hover:bg-rose-700 transition-colors"
+            className="px-6 py-3 bg-rose-600 text-white rounded-lg hover:bg-rose-700 transition-colors font-medium"
           >
             Ver todos os Pokémons
           </button>
@@ -196,8 +206,8 @@ export function Home() {
       <ol className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-4 lg:gap-8 items-center justify-center">
         {pokemons.map((pokemon, index) => (
           <li
-            key={`${pokemon.id}-${index}`} // Usa ID + index para key única
-            onClick={() => handlePokemonClick(pokemon)} // CORREÇÃO: Passa o objeto pokemon
+            key={`${pokemon.id}-${index}`}
+            onClick={() => handlePokemonClick(pokemon)}
             className="relative flex items-center justify-between w-full max-w-2xl h-60 bg-white rounded-2xl shadow-md mx-auto p-4 md:p-1 hover:scale-105 transition-transform duration-200 overflow-hidden cursor-pointer"
           >
             <div className="grid grid-cols-2 h-full w-full items-center">

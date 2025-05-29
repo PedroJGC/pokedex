@@ -80,14 +80,38 @@ export function Header({ onSearch }: HeaderProps) {
     return () => document.removeEventListener("mousedown", handleClickOutside)
   }, [])
 
+  // Função para verificar se é um nome exato
+  const findExactMatch = (term: string): PokemonSuggestion | null => {
+    return (
+      pokemonList.find(
+        (pokemon) => pokemon.name.toLowerCase() === term.toLowerCase().trim()
+      ) || null
+    )
+  }
+
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
-    if (searchTerm.trim()) {
+    const trimmedTerm = searchTerm.trim()
+
+    if (!trimmedTerm) return
+
+    // Verifica se existe um match exato
+    const exactMatch = findExactMatch(trimmedTerm)
+
+    if (exactMatch) {
+      // Nome exato encontrado - vai para a página do Pokémon
+      navigate(`/load-pokemon/${exactMatch.id}`)
+    } else {
+      // Nome não é exato - faz busca por aproximação na Home
       if (onSearch) {
-        onSearch(searchTerm.trim())
+        onSearch(trimmedTerm)
       }
-      setShowSuggestions(false)
     }
+
+    // Limpa o input e fecha sugestões
+    setSearchTerm("")
+    setShowSuggestions(false)
+    inputRef.current?.blur()
   }
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -110,13 +134,12 @@ export function Header({ onSearch }: HeaderProps) {
   }
 
   const handleSuggestionClick = (pokemon: PokemonSuggestion) => {
-    setSearchTerm(pokemon.name)
-    setShowSuggestions(false)
+    // Ao clicar numa sugestão, vai direto para a página do Pokémon
+    navigate(`/load-pokemon/${pokemon.id}`)
 
-    // Executa a pesquisa com o nome selecionado
-    if (onSearch) {
-      onSearch(pokemon.name)
-    }
+    // Limpa o input e fecha sugestões
+    setSearchTerm("")
+    setShowSuggestions(false)
   }
 
   const handleSuggestionKeyPress = (
