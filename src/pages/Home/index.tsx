@@ -69,7 +69,7 @@ export function Home() {
   }, [])
 
   const handlePokemonClick = (index: number) => {
-    navigate(`/pokemon/${index + 1}`)
+    navigate(`/load-pokemon/${index + 1}`)
   }
 
   // Loading inicial
