@@ -255,7 +255,7 @@ export function Home() {
             <button
               onClick={loadMorePokemons}
               disabled={isLoadingMore}
-              className="px-6 py-3 bg-rose-600 text-white rounded-lg hover:bg-rose-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium"
+              className="px-6 py-3 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium"
             >
               {isLoadingMore ? (
                 <div className="flex items-center justify-center gap-2">
