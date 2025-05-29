@@ -33,6 +33,8 @@ export function Home() {
   const loadInitialPokemons = async () => {
     setIsLoading(true)
     setError(null)
+    setIsSearchMode(false)
+    setSearchTerm("")
 
     try {
       const data = await fetchPokemonPage(1, POKEMONS_PER_PAGE)
@@ -50,7 +52,7 @@ export function Home() {
 
   // Função para carregar mais Pokémons
   const loadMorePokemons = async () => {
-    if (!hasMore || isLoadingMore) return
+    if (!hasMore || isLoadingMore || isSearchMode) return
 
     setIsLoadingMore(true)
     setError(null)
@@ -73,7 +75,10 @@ export function Home() {
 
   // Função para pesquisar Pokémons
   const handleSearch = async (term: string) => {
+    // Se o termo estiver vazio, volta para a lista completa
     if (!term.trim()) {
+      setIsSearchMode(false)
+      setSearchTerm("")
       loadInitialPokemons()
       return
     }
@@ -100,6 +105,7 @@ export function Home() {
   // Função para limpar pesquisa
   const clearSearch = () => {
     setSearchTerm("")
+    setIsSearchMode(false)
     loadInitialPokemons()
   }
 
@@ -112,8 +118,9 @@ export function Home() {
     loadInitialPokemons()
   }, [])
 
-  const handlePokemonClick = (index: number) => {
-    navigate(`/load-pokemon/${index + 1}`)
+  // CORREÇÃO: Usa o ID real do Pokémon ao invés do índice
+  const handlePokemonClick = (pokemon: Pokemon) => {
+    navigate(`/load-pokemon/${pokemon.id}`)
   }
 
   // Loading inicial
@@ -189,8 +196,8 @@ export function Home() {
       <ol className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-4 lg:gap-8 items-center justify-center">
         {pokemons.map((pokemon, index) => (
           <li
-            key={index}
-            onClick={() => handlePokemonClick(index)}
+            key={`${pokemon.id}-${index}`} // Usa ID + index para key única
+            onClick={() => handlePokemonClick(pokemon)} // CORREÇÃO: Passa o objeto pokemon
             className="relative flex items-center justify-between w-full max-w-2xl h-60 bg-white rounded-2xl shadow-md mx-auto p-4 md:p-1 hover:scale-105 transition-transform duration-200 overflow-hidden cursor-pointer"
           >
             <div className="grid grid-cols-2 h-full w-full items-center">
@@ -199,8 +206,8 @@ export function Home() {
                   {pokemon.name}
                 </h2>
                 <ol className="col-span-2 font-nunito pt-6">
-                  {pokemon.types.map((type) => (
-                    <li key={type} className="mb-1">
+                  {pokemon.types.map((type, typeIndex) => (
+                    <li key={`${type}-${typeIndex}`} className="mb-1">
                       <div
                         className="first-letter:uppercase px-2 py-1 rounded text-white text-sm font-medium"
                         style={{
@@ -231,29 +238,31 @@ export function Home() {
         ))}
       </ol>
 
-      {/* Botão de carregar mais */}
-      <div className="mt-8 mb-8 text-center">
-        {hasMore ? (
-          <button
-            onClick={loadMorePokemons}
-            disabled={isLoadingMore}
-            className="px-6 py-3 bg-rose-600 text-white rounded-lg hover:bg-rose-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium"
-          >
-            {isLoadingMore ? (
-              <div className="flex items-center justify-center gap-2">
-                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-                Carregando...
-              </div>
-            ) : (
-              `Carregar mais Pokémons`
-            )}
-          </button>
-        ) : (
-          <p className="text-gray-500 font-medium">
-            🎉 Você viu todos os Pokémons disponíveis!
-          </p>
-        )}
-      </div>
+      {/* Botão de carregar mais - só aparece quando não está em modo de pesquisa */}
+      {!isSearchMode && (
+        <div className="mt-8 mb-8 text-center">
+          {hasMore ? (
+            <button
+              onClick={loadMorePokemons}
+              disabled={isLoadingMore}
+              className="px-6 py-3 bg-rose-600 text-white rounded-lg hover:bg-rose-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium"
+            >
+              {isLoadingMore ? (
+                <div className="flex items-center justify-center gap-2">
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                  Carregando...
+                </div>
+              ) : (
+                `Carregar mais Pokémons`
+              )}
+            </button>
+          ) : (
+            <p className="text-gray-500 font-medium">
+              🎉 Você viu todos os Pokémons disponíveis!
+            </p>
+          )}
+        </div>
+      )}
 
       {/* Erro ao carregar mais */}
       {error && pokemons.length > 0 && (
