@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
-import { useNavigate } from "react-router-dom"
-import { fetchPokemonPage } from "../../services/poke_api"
+import { useNavigate, useOutletContext } from "react-router-dom"
+import { fetchPokemonPage, searchPokemonByName } from "../../services/poke_api"
 import { typeColors } from "../../utils/typeColors"
 
 interface Pokemon {
@@ -8,6 +8,10 @@ interface Pokemon {
   image: string
   types: string[]
   id: number
+}
+
+interface OutletContext {
+  setSearchHandler: (handler: (term: string) => void) => void
 }
 
 export function Home() {
@@ -18,7 +22,10 @@ export function Home() {
   const [hasMore, setHasMore] = useState(true)
   const [totalCount, setTotalCount] = useState(0)
   const [error, setError] = useState<string | null>(null)
+  const [isSearchMode, setIsSearchMode] = useState(false)
+  const [searchTerm, setSearchTerm] = useState("")
   const navigate = useNavigate()
+  const { setSearchHandler } = useOutletContext<OutletContext>()
 
   const POKEMONS_PER_PAGE = 21
 
@@ -64,6 +71,43 @@ export function Home() {
     }
   }
 
+  // Função para pesquisar Pokémons
+  const handleSearch = async (term: string) => {
+    if (!term.trim()) {
+      loadInitialPokemons()
+      return
+    }
+
+    setIsLoading(true)
+    setError(null)
+    setIsSearchMode(true)
+    setSearchTerm(term)
+
+    try {
+      const searchResults = await searchPokemonByName(term)
+      setPokemons(searchResults)
+      setHasMore(false) // Não há paginação na pesquisa
+      setTotalCount(searchResults.length)
+    } catch (error) {
+      console.error("Erro ao pesquisar Pokémons:", error)
+      setError("Erro ao pesquisar Pokémons. Tente novamente.")
+      setPokemons([])
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  // Função para limpar pesquisa
+  const clearSearch = () => {
+    setSearchTerm("")
+    loadInitialPokemons()
+  }
+
+  // Registra o handler de pesquisa no layout
+  useEffect(() => {
+    setSearchHandler(handleSearch)
+  }, [setSearchHandler])
+
   useEffect(() => {
     loadInitialPokemons()
   }, [])
@@ -103,12 +147,43 @@ export function Home() {
 
   return (
     <main className="grid px-4 md:px-4 lg:px-8 max-w-screen-xl mx-auto">
-      {/* Contador de Pokémons */}
+      {/* Indicador de pesquisa e contador */}
       <div className="mb-6 text-center">
-        <p className="text-gray-600">
-          Mostrando {pokemons.length} de {totalCount.toLocaleString()} Pokémons
-        </p>
+        {isSearchMode ? (
+          <div className="space-y-2">
+            <p className="text-gray-600">
+              Resultados para "{searchTerm}": {pokemons.length} Pokémon(s)
+              encontrado(s)
+            </p>
+            <button
+              onClick={clearSearch}
+              className="text-rose-600 hover:text-rose-700 underline text-sm"
+            >
+              ← Voltar à lista completa
+            </button>
+          </div>
+        ) : (
+          <p className="text-gray-600">
+            Mostrando {pokemons.length} de {totalCount.toLocaleString()}{" "}
+            Pokémons
+          </p>
+        )}
       </div>
+
+      {/* Mensagem quando não há resultados na pesquisa */}
+      {isSearchMode && pokemons.length === 0 && !isLoading && (
+        <div className="text-center py-12">
+          <p className="text-gray-600 text-lg mb-4">
+            Nenhum Pokémon encontrado para "{searchTerm}"
+          </p>
+          <button
+            onClick={clearSearch}
+            className="px-4 py-2 bg-rose-600 text-white rounded hover:bg-rose-700 transition-colors"
+          >
+            Ver todos os Pokémons
+          </button>
+        </div>
+      )}
 
       {/* Grid de Pokémons */}
       <ol className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-4 lg:gap-8 items-center justify-center">
