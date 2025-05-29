@@ -1,5 +1,6 @@
 import { Outlet, useLocation } from "react-router-dom"
 import { Header } from "../components/Header/Header"
+import { ScrollToTopButton } from "../components/ScrollToTopButton"
 import { useState, useEffect } from "react"
 
 export function DefaultLayout() {
@@ -18,6 +19,7 @@ export function DefaultLayout() {
     <div>
       <Header onSearch={searchHandler} />
       <Outlet context={{ setSearchHandler }} />
+      <ScrollToTopButton />
     </div>
   )
 }
